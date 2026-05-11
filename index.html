@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌟 儿童英文打字游戏 🌟</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            background: linear-gradient(180deg, #74b9ff 0%, #a8e6cf 50%, #fdcb6e 100%);
+        }
+
+        /* 云朵动画 */
+        .cloud {
+            position: absolute;
+            background: white;
+            border-radius: 100px;
+            opacity: 0.9;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .cloud::before,
+        .cloud::after {
+            content: '';
+            position: absolute;
+            background: white;
+            border-radius: 100px;
+        }
+
+        .cloud1 {
+            width: 100px;
+            height: 40px;
+            top: 10%;
+            left: 10%;
+        }
+
+        .cloud1::before {
+            width: 50px;
+            height: 50px;
+            top: -25px;
+            left: 10px;
+        }
+
+        .cloud1::after {
+            width: 60px;
+            height: 40px;
+            top: -15px;
+            right: 10px;
+        }
+
+        .cloud2 {
+            width: 80px;
+            height: 35px;
+            top: 20%;
+            right: 15%;
+            animation-delay: -5s;
+        }
+
+        .cloud2::before {
+            width: 40px;
+            height: 40px;
+            top: -20px;
+            left: 15px;
+        }
+
+        .cloud2::after {
+            width: 50px;
+            height: 35px;
+            top: -10px;
+            right: 10px;
+        }
+
+        .cloud3 {
+            width: 120px;
+            height: 45px;
+            top: 5%;
+            left: 50%;
+            animation-delay: -10s;
+        }
+
+        .cloud3::before {
+            width: 60px;
+            height: 60px;
+            top: -30px;
+            left: 20px;
+        }
+
+        .cloud3::after {
+            width: 70px;
+            height: 45px;
+            top: -20px;
+            right: 15px;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            50% { transform: translateX(30px) translateY(-10px); }
+        }
+
+        /* 太阳 */
+        .sun {
+            position: absolute;
+            top: 30px;
+            right: 50px;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, #ffeaa7 0%, #fdcb6e 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 60px #fdcb6e;
+            animation: pulse 3s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* 彩虹 */
+        .rainbow {
+            position: absolute;
+            top: 80px;
+            left: 50px;
+            width: 200px;
+            height: 100px;
+        }
+
+        .rainbow::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 100px;
+            border: 20px solid;
+            border-color: #ff7675 transparent transparent transparent;
+            border-radius: 50%;
+            top: 0;
+            left: 0;
+        }
+
+        .rainbow::after {
+            content: '';
+            position: absolute;
+            width: 160px;
+            height: 80px;
+            border: 20px solid;
+            border-color: #ffeaa7 transparent transparent transparent;
+            border-radius: 50%;
+            top: 20px;
+            left: 20px;
+        }
+
+        /* 游戏容器 */
+        .game-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* 顶部区域 */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 20px;
+            z-index: 10;
+        }
+
+        .score-box, .time-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 30px;
+            border-radius: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .score-box span, .time-box span {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #6c5ce7;
+        }
+
+        .score-value, .time-value {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #fd79a8;
+        }
+
+        /* 按钮样式 */
+        .controls {
+            display: flex;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        .btn {
+            padding: 15px 35px;
+            font-size: 1.3rem;
+            font-weight: 900;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        .btn:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #55efc4, #00b894);
+            color: white;
+        }
+
+        .btn-pause {
+            background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+            color: #636e72;
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, #ff7675, #d63031);
+            color: white;
+        }
+
+        /* Canvas */
+        #gameCanvas {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            cursor: default;
+        }
+
+        /* 输入提示区 */
+        .input-hint {
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            z-index: 10;
+        }
+
+        .hint-label {
+            font-size: 1.2rem;
+            color: #636e72;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .hint-word {
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: 5px;
+        }
+
+        .hint-letter {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 0 2px;
+            border-radius: 10px;
+            color: #b2bec3;
+        }
+
+        .hint-letter.matched {
+            background: linear-gradient(135deg, #55efc4, #00b894);
+            color: white;
+            animation: pop 0.3s ease;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        /* 标题 */
+        .title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #6c5ce7;
+            text-shadow: 3px 3px 0 #fd79a8, 6px 6px 0 rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+            z-index: 10;
+        }
+
+        /* 草地装饰 */
+        .grass {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(180deg, #55efc4 0%, #00b894 100%);
+        }
+
+        /* 小花 */
+        .flower {
+            position: absolute;
+            bottom: 80px;
+            font-size: 2rem;
+        }
+
+        .flower1 { left: 10%; }
+        .flower2 { left: 30%; }
+        .flower3 { left: 60%; }
+        .flower4 { left: 85%; }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 1.8rem;
+            }
+            .btn {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+            .level-value, .time-value {
+                font-size: 1.5rem;
+            }
+            .hint-word {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* 等级样式 */
+        .level-box {
+            background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+            padding: 15px 30px;
+            border-radius: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .level-box span {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #6c5ce7;
+        }
+
+        .level-value {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #d63031;
+        }
+
+        /* 中间进度条 */
+        .middle-bar {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 15px;
+            z-index: 10;
+        }
+
+        .progress-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 12px 25px;
+            border-radius: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .progress-box span {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #6c5ce7;
+            white-space: nowrap;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 20px;
+            background: #dfe6e9;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #55efc4, #00b894);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fd79a8;
+            min-width: 80px;
+            text-align: right;
+        }
+
+        /* 小红花奖励区域 */
+        .flower-reward-container {
+            position: fixed;
+            top: 50%;
+            right: 30px;
+            transform: translateY(-50%);
+            z-index: 20;
+        }
+
+        .flower-reward {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .flower-item {
+            font-size: 2.5rem;
+            animation: flowerPop 0.5s ease;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        @keyframes flowerPop {
+            0% { transform: scale(0) rotate(-180deg); }
+            50% { transform: scale(1.3) rotate(10deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        .level-label {
+            font-size: 1rem;
+            color: #6c5ce7;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+
+        /* 烟花容器 */
+        .fireworks-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .firework {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: fireworkExplode 1s ease-out forwards;
+        }
+
+        @keyframes fireworkExplode {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(2);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(3);
+                opacity: 0;
+            }
+        }
+
+        /* 消息提示 */
+        .message-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.98);
+            padding: 40px 60px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            z-index: 2000;
+            text-align: center;
+            display: none;
+            animation: messagePopIn 0.5s ease;
+        }
+
+        .message-overlay.show {
+            display: block;
+        }
+
+        @keyframes messagePopIn {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .message-title {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #6c5ce7;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 0 #fd79a8;
+        }
+
+        .message-content {
+            font-size: 1.5rem;
+            color: #636e72;
+            margin-bottom: 20px;
+        }
+
+        .message-btn {
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            background: linear-gradient(135deg, #55efc4, #00b894);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 900;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .message-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .message-flower {
+            font-size: 4rem;
+            margin: 20px 0;
+        }
+
+        .certificate {
+            background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+            padding: 30px;
+            border-radius: 20px;
+            border: 4px solid #6c5ce7;
+            margin: 20px 0;
+        }
+
+        .certificate-title {
+            font-size: 2rem;
+            color: #6c5ce7;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .certificate-text {
+            font-size: 1.2rem;
+            color: #636e72;
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景装饰 -->
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+    <div class="cloud cloud3"></div>
+    <div class="sun"></div>
+    <div class="rainbow"></div>
+    <div class="grass"></div>
+    <div class="flower flower1">🌸</div>
+    <div class="flower flower2">🌻</div>
+    <div class="flower flower3">🌺</div>
+    <div class="flower flower4">🌷</div>
+
+    <div class="game-container">
+        <h1 class="title">🌟 儿童英文打字游戏 🌟</h1>
+        
+        <div class="top-bar">
+            <div class="level-box">
+                <span>🏆 等级:</span>
+                <span class="level-value" id="level">1</span>
+            </div>
+            
+            <div class="controls">
+                <button class="btn btn-start" id="startBtn">▶ 开始</button>
+                <button class="btn btn-pause" id="pauseBtn">⏸ 暂停</button>
+                <button class="btn btn-stop" id="stopBtn">⏹ 停止</button>
+            </div>
+            
+            <div class="time-box">
+                <span>⏰ 时间:</span>
+                <span class="time-value" id="time">00:00</span>
+            </div>
+        </div>
+
+        <div class="middle-bar">
+            <div class="progress-box">
+                <span>📊 进度:</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <span class="progress-text" id="progressText">0 / 50</span>
+            </div>
+        </div>
+
+        <div class="flower-reward-container">
+            <div class="flower-reward" id="flowerReward"></div>
+        </div>
+
+        <canvas id="gameCanvas" width="800" height="500"></canvas>
+
+        <div class="input-hint">
+            <div class="hint-label">正在输入:</div>
+            <div class="hint-word" id="hintWord">等待开始...</div>
+        </div>
+    </div>
+
+    <div class="fireworks-container" id="fireworksContainer"></div>
+    <div class="message-overlay" id="messageOverlay"></div>
+
+    <script>
+        // 单词库
+        const wordList = [
+            // 动物
+            'cat', 'dog', 'bird', 'fish', 'rabbit', 'elephant', 'tiger', 'lion',
+            'monkey', 'panda', 'bear', 'fox', 'wolf', 'duck', 'chicken',
+            // 颜色
+            'red', 'blue', 'green', 'yellow', 'orange', 'purple', 'pink', 'white',
+            'black', 'brown',
+            // 数字
+            'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight',
+            'nine', 'ten',
+            // 水果
+            'apple', 'banana', 'orange', 'grape', 'melon', 'peach', 'pear',
+            'strawberry', 'cherry',
+            // 日常用品
+            'book', 'pen', 'pencil', 'bag', 'car', 'ball', 'kite', 'doll',
+            'train', 'bike', 'sun', 'moon', 'star', 'cloud', 'rain', 'snow',
+            'tree', 'flower', 'grass', 'leaf', 'house', 'door', 'window',
+            'chair', 'table', 'bed', 'cup', 'plate', 'fork', 'spoon',
+            // 家庭
+            'mom', 'dad', 'baby', 'sister', 'brother', 'family', 'love',
+            'happy', 'smile', 'fun', 'play', 'run', 'jump', 'sing', 'dance',
+            'read', 'write', 'draw', 'paint', 'cook', 'eat', 'drink', 'sleep'
+        ];
+
+        // 等级配置
+        const levelConfig = [
+            { level: 1, requiredScore: 0, nextLevelScore: 50, speedMultiplier: 1.0, flowers: 0 },
+            { level: 2, requiredScore: 50, nextLevelScore: 80, speedMultiplier: 1.1, flowers: 1 },
+            { level: 3, requiredScore: 130, nextLevelScore: 120, speedMultiplier: 1.21, flowers: 2 },
+            { level: 4, requiredScore: 250, nextLevelScore: 180, speedMultiplier: 1.331, flowers: 3 },
+            { level: 5, requiredScore: 430, nextLevelScore: 280, speedMultiplier: 1.4641, flowers: 4 },
+            { level: 6, requiredScore: 710, nextLevelScore: 500, speedMultiplier: 1.61051, flowers: 5 }
+        ];
+
+        // 颜色数组
+        const colors = [
+            '#ff7675', '#fd79a8', '#6c5ce7', '#74b9ff', '#00b894',
+            '#ffeaa7', '#fdcb6e', '#e17055', '#00cec9', '#a29bfe'
+        ];
+
+        // 游戏状态
+        let gameState = {
+            isPlaying: false,
+            isPaused: false,
+            level: 1,
+            totalScore: 0,
+            time: 0,
+            words: [],
+            activeWordIndex: -1,
+            animationId: null,
+            timerInterval: null,
+            wordSpawnInterval: null,
+            baseSpeed: 1.5
+        };
+
+        // DOM元素
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const timeEl = document.getElementById('time');
+        const hintWordEl = document.getElementById('hintWord');
+        const startBtn = document.getElementById('startBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const levelEl = document.getElementById('level');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const flowerRewardEl = document.getElementById('flowerReward');
+        const fireworksContainer = document.getElementById('fireworksContainer');
+        const messageOverlay = document.getElementById('messageOverlay');
+
+        // 音频上下文
+        let audioContext = null;
+
+        // 初始化音频
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        // 播放错误提示音
+        function playErrorSound() {
+            if (!audioContext) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(100, audioContext.currentTime + 0.2);
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.2);
+        }
+
+        // 播放成功音
+        function playSuccessSound() {
+            if (!audioContext) return;
+            
+            const frequencies = [523, 659, 784];
+            frequencies.forEach((freq, i) => {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(freq, audioContext.currentTime + i * 0.1);
+                
+                gainNode.gain.setValueAtTime(0.2, audioContext.currentTime + i * 0.1);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + i * 0.1 + 0.3);
+                
+                oscillator.start(audioContext.currentTime + i * 0.1);
+                oscillator.stop(audioContext.currentTime + i * 0.1 + 0.3);
+            });
+        }
+
+        // 朗读单词
+        function speakWord(word) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(word);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.8;
+                utterance.pitch = 1.2;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        // 播放升级音效
+        function playLevelUpSound() {
+            if (!audioContext) return;
+            
+            const melody = [523, 659, 784, 1047];
+            melody.forEach((freq, i) => {
+                setTimeout(() => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.type = 'sine';
+                    oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
+                    
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.4);
+                }, i * 150);
+            });
+        }
+
+        // 创建烟花效果
+        function createFireworks() {
+            const colors = ['#ff7675', '#fd79a8', '#6c5ce7', '#74b9ff', '#00b894', '#ffeaa7', '#fdcb6e'];
+            
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const firework = document.createElement('div');
+                    firework.className = 'firework';
+                    firework.style.left = Math.random() * window.innerWidth + 'px';
+                    firework.style.top = Math.random() * window.innerHeight * 0.6 + 'px';
+                    firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    firework.style.boxShadow = `0 0 ${10 + Math.random() * 20}px ${firework.style.backgroundColor}`;
+                    fireworksContainer.appendChild(firework);
+                    
+                    setTimeout(() => {
+                        firework.remove();
+                    }, 1000);
+                }, i * 100);
+            }
+        }
+
+        // 更新进度条
+        function updateProgressBar() {
+            const currentConfig = levelConfig[gameState.level - 1];
+            const scoreInLevel = gameState.totalScore - currentConfig.requiredScore;
+            const levelTarget = currentConfig.nextLevelScore;
+            const percentage = Math.min((scoreInLevel / levelTarget) * 100, 100);
+            
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = `${gameState.totalScore} / ${levelConfig[gameState.level].requiredScore}`;
+        }
+
+        // 检查升级
+        function checkLevelUp() {
+            if (gameState.level >= 6) {
+                // 毕业
+                showGraduation();
+                return;
+            }
+            
+            const nextLevelConfig = levelConfig[gameState.level];
+            if (gameState.totalScore >= nextLevelConfig.requiredScore) {
+                gameState.level++;
+                levelEl.textContent = gameState.level;
+                updateProgressBar();
+                
+                // 更新小红花显示
+                updateFlowerDisplay();
+                
+                playLevelUpSound();
+                createFireworks();
+                showLevelUpMessage();
+            }
+        }
+
+        // 更新小红花显示
+        function updateFlowerDisplay() {
+            // 根据等级获取应该显示的小红花数量
+            const flowerCount = gameState.level - 1; // 1级0朵，2级1朵，3级2朵...
+            
+            let html = '';
+            for (let i = 0; i < flowerCount; i++) {
+                html += '<div class="flower-item">🌸</div>';
+            }
+            
+            flowerRewardEl.innerHTML = html;
+        }
+
+        // 显示升级消息
+        function showLevelUpMessage() {
+            const currentConfig = levelConfig[gameState.level - 1];
+            const flowers = '🌸'.repeat(currentConfig.flowers);
+            
+            messageOverlay.innerHTML = `
+                <div class="message-title">🎉 晋级成功！🎉</div>
+                <div class="message-content">恭喜升到第 ${gameState.level} 级！</div>
+                <div class="message-flower">${flowers}</div>
+                <button class="message-btn" onclick="closeMessage()">继续游戏</button>
+            `;
+            messageOverlay.classList.add('show');
+            
+            setTimeout(() => {
+                speakWord('Congratulations');
+            }, 500);
+        }
+
+        // 显示毕业消息
+        function showGraduation() {
+            gameState.isPlaying = false;
+            
+            if (gameState.animationId) {
+                cancelAnimationFrame(gameState.animationId);
+            }
+            if (gameState.timerInterval) {
+                clearInterval(gameState.timerInterval);
+            }
+            if (gameState.wordSpawnInterval) {
+                clearInterval(gameState.wordSpawnInterval);
+            }
+            
+            messageOverlay.innerHTML = `
+                <div class="message-title">🎓 顺利毕业！🎓</div>
+                <div class="certificate">
+                    <div class="certificate-title">毕业证书</div>
+                    <div class="certificate-text">恭喜小朋友完成所有等级！</div>
+                    <div class="certificate-text">总共得分：${gameState.totalScore}</div>
+                </div>
+                <div class="message-flower">🌸🌸🌸🌸🌸</div>
+                <button class="message-btn" onclick="restartGame()">重新开始</button>
+            `;
+            messageOverlay.classList.add('show');
+            
+            playLevelUpSound();
+            createFireworks();
+            
+            setTimeout(() => {
+                speakWord('Congratulations, you graduated!');
+            }, 500);
+        }
+
+        // 关闭消息
+        function closeMessage() {
+            messageOverlay.classList.remove('show');
+        }
+
+        // 重新开始游戏（毕业后的重置）
+        function restartGame() {
+            gameState.level = 1;
+            gameState.totalScore = 0;
+            gameState.time = 0;
+            gameState.words = [];
+            gameState.activeWordIndex = -1;
+            gameState.isPlaying = false;
+            gameState.isPaused = false;
+            
+            levelEl.textContent = '1';
+            updateTimeDisplay();
+            pauseBtn.textContent = '⏸ 暂停';
+            hintWordEl.textContent = '等待开始...';
+            flowerRewardEl.innerHTML = '';
+            updateProgressBar();
+            messageOverlay.classList.remove('show');
+            
+            draw();
+        }
+
+        // 生成随机单词
+        function spawnWord() {
+            const text = wordList[Math.floor(Math.random() * wordList.length)];
+            const x = Math.random() * (canvas.width - text.length * 30) + 20;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const currentLevelConfig = levelConfig[gameState.level - 1];
+            const speed = (1 + Math.random() * 1.5) * currentLevelConfig.speedMultiplier;
+            
+            gameState.words.push({
+                text: text,
+                x: x,
+                y: -50,
+                speed: speed,
+                matchedIndex: 0,
+                color: color,
+                active: true
+            });
+        }
+
+        // 更新提示显示
+        function updateHint() {
+            if (gameState.activeWordIndex >= 0 && gameState.words[gameState.activeWordIndex]) {
+                const word = gameState.words[gameState.activeWordIndex];
+                hintWordEl.innerHTML = word.text.split('').map((letter, i) => {
+                    const matched = i < word.matchedIndex;
+                    return `<span class="hint-letter ${matched ? 'matched' : ''}">${letter}</span>`;
+                }).join('');
+            } else {
+                hintWordEl.textContent = '等待单词...';
+            }
+        }
+
+        // 绘制游戏
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 绘制单词
+            gameState.words.forEach(word => {
+                if (!word.active) return;
+                
+                ctx.font = 'bold 36px Nunito';
+                ctx.textBaseline = 'top';
+                
+                let x = word.x;
+                for (let i = 0; i < word.text.length; i++) {
+                    const letter = word.text[i];
+                    const matched = i < word.matchedIndex;
+                    
+                    if (matched) {
+                        ctx.fillStyle = '#00b894';
+                        ctx.shadowColor = '#55efc4';
+                        ctx.shadowBlur = 10;
+                    } else {
+                        ctx.fillStyle = word.color;
+                        ctx.shadowBlur = 0;
+                    }
+                    
+                    ctx.fillText(letter, x, word.y);
+                    x += ctx.measureText(letter).width + 3;
+                }
+                
+                ctx.shadowBlur = 0;
+            });
+        }
+
+        // 更新游戏
+        function update() {
+            if (!gameState.isPlaying || gameState.isPaused) return;
+            
+            // 更新单词位置
+            gameState.words.forEach(word => {
+                if (word.active) {
+                    word.y += word.speed;
+                    
+                    // 单词落地移除
+                    if (word.y > canvas.height) {
+                        word.active = false;
+                    }
+                }
+            });
+            
+            // 清理非活跃单词
+            gameState.words = gameState.words.filter(w => w.active);
+            
+            // 如果活跃单词被移除，重置索引
+            if (gameState.activeWordIndex >= 0 && 
+                (!gameState.words[gameState.activeWordIndex] || !gameState.words[gameState.activeWordIndex].active)) {
+                gameState.activeWordIndex = -1;
+            }
+            
+            draw();
+            updateHint();
+            
+            gameState.animationId = requestAnimationFrame(update);
+        }
+
+        // 更新时间显示
+        function updateTimeDisplay() {
+            const minutes = Math.floor(gameState.time / 60);
+            const seconds = gameState.time % 60;
+            timeEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // 开始游戏
+        function startGame() {
+            // 清除所有现有的定时器和动画，防止重复启动导致加速
+            if (gameState.animationId) {
+                cancelAnimationFrame(gameState.animationId);
+                gameState.animationId = null;
+            }
+            if (gameState.timerInterval) {
+                clearInterval(gameState.timerInterval);
+                gameState.timerInterval = null;
+            }
+            if (gameState.wordSpawnInterval) {
+                clearInterval(gameState.wordSpawnInterval);
+                gameState.wordSpawnInterval = null;
+            }
+            
+            initAudio();
+            
+            // 如果是毕业后的重新开始，重置等级
+            if (gameState.level > 6 || gameState.totalScore > 0) {
+                gameState.level = 1;
+                gameState.totalScore = 0;
+                levelEl.textContent = '1';
+            }
+            
+            // 清空小红花容器
+            while (flowerRewardEl.firstChild) {
+                flowerRewardEl.removeChild(flowerRewardEl.firstChild);
+            }
+            
+            gameState.isPlaying = true;
+            gameState.isPaused = false;
+            gameState.time = 0;
+            gameState.words = [];
+            gameState.activeWordIndex = -1;
+            
+            updateTimeDisplay();
+            pauseBtn.textContent = '⏸ 暂停';
+            updateProgressBar();
+            
+            // 生成初始单词
+            spawnWord();
+            
+            // 开始更新循环
+            update();
+            
+            // 计时器
+            gameState.timerInterval = setInterval(() => {
+                if (!gameState.isPaused) {
+                    gameState.time++;
+                    updateTimeDisplay();
+                }
+            }, 1000);
+            
+            // 单词生成器
+            gameState.wordSpawnInterval = setInterval(() => {
+                if (!gameState.isPaused && gameState.words.length < 5) {
+                    spawnWord();
+                }
+            }, 2500);
+        }
+
+        // 暂停游戏
+        function pauseGame() {
+            gameState.isPaused = !gameState.isPaused;
+            pauseBtn.textContent = gameState.isPaused ? '▶ 继续' : '⏸ 暂停';
+            
+            if (!gameState.isPaused) {
+                update();
+            }
+        }
+
+        // 停止游戏
+        function stopGame() {
+            gameState.isPlaying = false;
+            gameState.isPaused = false;
+            
+            if (gameState.animationId) {
+                cancelAnimationFrame(gameState.animationId);
+            }
+            
+            if (gameState.timerInterval) {
+                clearInterval(gameState.timerInterval);
+            }
+            
+            if (gameState.wordSpawnInterval) {
+                clearInterval(gameState.wordSpawnInterval);
+            }
+            
+            pauseBtn.textContent = '⏸ 暂停';
+            hintWordEl.textContent = '等待开始...';
+            
+            draw();
+        }
+
+        // 键盘输入处理
+        function handleKeyDown(e) {
+            if (!gameState.isPlaying || gameState.isPaused) return;
+            
+            const key = e.key.toLowerCase();
+            
+            // 只处理字母
+            if (!/^[a-z]$/.test(key)) return;
+            
+            // 寻找目标单词
+            if (gameState.activeWordIndex < 0) {
+                for (let i = 0; i < gameState.words.length; i++) {
+                    if (gameState.words[i].active && 
+                        gameState.words[i].text[0].toLowerCase() === key) {
+                        gameState.activeWordIndex = i;
+                        gameState.words[i].matchedIndex = 1;
+                        checkWordComplete(i);
+                        updateHint();
+                        return;
+                    }
+                }
+                playErrorSound();
+            } else {
+                const word = gameState.words[gameState.activeWordIndex];
+                if (word && word.active) {
+                    const expectedLetter = word.text[word.matchedIndex].toLowerCase();
+                    if (key === expectedLetter) {
+                        word.matchedIndex++;
+                        checkWordComplete(gameState.activeWordIndex);
+                    } else {
+                        playErrorSound();
+                    }
+                    updateHint();
+                }
+            }
+        }
+
+        // 检查单词是否完成
+        function checkWordComplete(index) {
+            const word = gameState.words[index];
+            if (word.matchedIndex >= word.text.length) {
+                word.active = false;
+                gameState.totalScore++;
+                gameState.activeWordIndex = -1;
+                
+                updateProgressBar();
+                checkLevelUp();
+                
+                playSuccessSound();
+                speakWord(word.text);
+            }
+        }
+
+        // 事件监听
+        startBtn.addEventListener('click', startGame);
+        pauseBtn.addEventListener('click', pauseGame);
+        stopBtn.addEventListener('click', stopGame);
+        document.addEventListener('keydown', handleKeyDown);
+
+        // 初始绘制
+        draw();
+    </script>
+</body>
+</html>
